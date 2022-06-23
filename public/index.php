@@ -1,7 +1,7 @@
 <?php
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
-use App\Film;
+use App\ActiveRecord;
 use App\View;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
@@ -9,52 +9,52 @@ require_once dirname(__DIR__) . '/vendor/autoload.php';
 $loader = new FilesystemLoader(dirname(__DIR__) . '/templates/');
 $twig = new Environment($loader);
 $view = new View($twig);
-$film = new Film();
+$AR = new ActiveRecord();
 
-$view->__invokeHeader();
+$view->showHeader();
 
 if (isset($_GET['getAll'])) {
-    $view->__invokeTable($film->getAll());
+    $view->showTable($AR->getAll());
 }
 
 if (isset($_GET['getById'])) {
-    $view->__invokeGetById();
+    $view->showGetById();
 }
 if (isset($_GET['getIdButton'])) {
-    $film->id = $_GET['getId'];
-    if ($film->id != null) {
-        $view->__invokeTable($film->GetById());
+    if ($_GET['getId'] != null) {
+        $AR->film->id = (int)$_GET['getId'];
+        $view->showTable($AR->GetById());
     }
 }
 
 if (isset($_GET['getByField'])) {
-    $view->__invokeGetByField();
+    $view->showGetByField();
 }
 if (isset($_GET['getFieldButton'])) {
-    $film->title = $_GET['field'];
-    $film->category = $_GET['field'];
-    if ($film->category != null) {
-        $view->__invokeTable($film->getByField());
+    if ($_GET['field'] != null) {
+        $AR->film->title = $_GET['field'];
+        $AR->film->category = $_GET['field'];
+        $view->showTable($AR->getByField());
     }
 }
 
 if (isset($_GET['addRow'])) {
-    $view->__invokeAddRow();
+    $view->showAddRow();
 }
 if (isset($_GET['addButton'])){
-    $film->title = $_GET['title'];
-    $film->category = $_GET['category'];
-    if ($film->title != null && $film->category != null) {
-        $film->addRow();
+    if ($_GET['title'] != null && $_GET['category'] != null) {
+        $AR->film->title = $_GET['title'];
+        $AR->film->category = $_GET['category'];
+        $AR->addRow();
     }
 }
 
 if (isset($_GET['deleteById'])) {
-    $view->__invokeDeleteById();
+    $view->showDeleteById();
 }
 if (isset($_GET['deleteButton'])) {
-    $film->id = $_GET['delId'];
-    if ($film->id != null) {
-        $film->deleteById();
+    if ($_GET['delId'] != null) {
+        $AR->film->id = (int)$_GET['delId'];
+        $AR->deleteById();
     }
 }
